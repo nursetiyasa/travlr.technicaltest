@@ -1,0 +1,10 @@
+﻿@model Travlr.TechnicalTest.Domain.Pax
+
+<div><strong>Pax ID: </strong>@Model.Id</div>
+<div><strong>First Name: </strong>@Model.First</div>
+<div><strong>Last Name: </strong>@Model.Last</div>
+<div><strong>Email Address: </strong>@Model.Email</div>
+<hr/>
+<div><strong>Book for Product: </strong>@TempData["product"]</div>
+<div><strong>Check-In Date: </strong>@TempData["checkin"]</div>
+<div><strong>Total Nights: </strong>@TempData["nights"]</div>

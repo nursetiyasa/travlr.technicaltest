@@ -1,0 +1,14 @@
+﻿<div class="text-center">
+    @using (Html.BeginForm("SearchResult", "Home"))
+    {
+        <div style="margin-top: 30px; margin-left: 50px;">
+            <div class="input-group" style="width: 100%;">
+                <input type="text" class="form-control" id="searchKeyword" name="keyword" placeholder="Keyword">
+                <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude">
+                <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude">
+                <input class="btn-primary" id="submit" type="submit" value="Search" />
+            </div>
+        </div>
+    }
+    <hr />
+</div>

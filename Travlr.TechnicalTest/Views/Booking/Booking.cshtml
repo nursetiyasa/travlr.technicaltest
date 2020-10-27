@@ -1,0 +1,139 @@
+﻿@using System.Globalization
+@model Travlr.TechnicalTest.Domain.ProductResult
+
+<div>
+    <h4>Products</h4>
+    <hr />
+    <div class="row">
+        @if (Model == null)
+        {
+            <div style="padding-left: 20px; padding-right: 20px;">
+                <div class="alert alert-info" role="alert">
+                    <h6>Product not found</h6>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var product in Model.Products)
+            {
+                var productValidFrom = string.IsNullOrEmpty(product.ValidFrom) ? "-" : product.ValidFrom;
+                var productValidTo = string.IsNullOrEmpty(product.ValidTo) ? "-" : product.ValidTo;
+                var totalPrice = @product.AdvertisedPrice - (@product.Commission * Convert.ToDecimal(0.5, CultureInfo.InvariantCulture));
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title" style="margin-top: 10px;">@product.Name</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Description: </strong>@product.LongDescription</p>
+                        <p class="card-text"><strong>Available From: </strong>@productValidFrom</p>
+                        <p class="card-text"><strong>Available Until: </strong>@productValidTo</p>
+                        <p class="card-text"><strong>Price: @product.CurrencyIso </strong>@product.AdvertisedPrice</p>
+                        <hr />
+                        <p class="card-text">Please fill data below:</p>
+                        @using (Html.BeginForm("FinalizePayment", "Booking", routeValues: new
+                        {
+                            productId = product.Id, productName = product.Name
+                        }))
+                        {
+                            <div class="form-group">
+                                <p class="card-text">
+                                    <strong>First Name: </strong>
+                                    <input id="firstName" type="text" class="form-control" name="firstName" onchange="showTotalPrice()" />
+                                </p>
+                                <p class="card-text">
+                                    <strong>Last Name: </strong>
+                                    <input id="lastName" type="text" class="form-control" name="lastName" onchange="showTotalPrice()" />
+                                </p>
+                                <p class="card-text">
+                                    <strong>Email Address: </strong>
+                                    <input id="email" class="form-control" name="email" onchange="showTotalPrice()" type="email" pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,}$" />
+                                </p>
+                                <p class="card-text">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <strong>Start Date: </strong>
+                                            <input id="selectDateFrom" type="text" class="form-control" name="selectDateFrom" onchange="showTotalPrice()" />
+                                        </div>
+                                        <div class="col-2">
+                                            <strong>Hour: </strong>
+                                            <select id="selectDateFromHour" name="selectDateFromHour" class="form-control">
+                                                @for (var i = 0; i < 24; i++)
+                                                {
+                                                    var value = i < 10 ? $"0{i.ToString()}" : i.ToString();
+                                                    <option value="@value">@value</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <strong>Minute: </strong>
+                                            <select id="selectDateFromMinute" name="selectDateFromMinute" class="form-control">
+                                                @for (var i = 0; i < 60; i++)
+                                                {
+                                                    var value = i < 10 ? $"0{i.ToString()}" : i.ToString();
+                                                    <option value="@value">@value</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </p>
+                                <p class="card-text">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <strong>End Date: </strong>
+                                            <input id="selectDateTo" type="text" class="form-control" name="selectDateTo" onchange="showTotalPrice()" />
+                                        </div>
+                                        <div class="col-2">
+                                            <strong>Hour: </strong>
+                                            <select id="selectDateToHour" name="selectDateToHour" class="form-control">
+                                                @for (var i = 0; i < 24; i++)
+                                                {
+                                                    var value = i < 10 ? $"0{i.ToString()}" : i.ToString();
+                                                    <option value="@value">@value</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <strong>Minute: </strong>
+                                            <select id="selectDateToMinute" name="selectDateToMinute" class="form-control">
+                                                @for (var i = 0; i < 60; i++)
+                                                {
+                                                    var value = i < 10 ? $"0{i.ToString()}" : i.ToString();
+                                                    <option value="@value">@value</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </p>
+                            </div>
+                            <hr />
+                            <div class="d-none" id="totalPriceLabel">
+                                <h6 class="card-text"><strong>Total Price (after discount): @product.CurrencyIso </strong>@totalPrice</h6>
+                                <p class="card-text"><strong>Payment Method: </strong>CASH</p>
+                                <input class="btn-primary" id="submit" type="submit" value="Proceed Payment Now" />
+                            </div>
+                        }
+                        @section Scripts
+                        {
+                            <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                            <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                            <script>
+                                $(function () {
+                                    $("#selectDateFrom").datepicker();
+                                    $("#selectDateFrom").datepicker("option", "dateFormat", "yy-mm-dd");
+                                    $("#selectDateTo").datepicker();
+                                    $("#selectDateTo").datepicker("option", "dateFormat", "yy-mm-dd");
+                                });
+                            </script>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

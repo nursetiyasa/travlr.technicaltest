@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Travlr.TechnicalTest.Domain.SearchResult>
+
+@using (Html.BeginForm("SearchResult", "Home"))
+{
+    <div style="margin-top: 30px; margin-left: 50px;">
+        <div class="input-group" style="width: 100%;">
+            <input type="text" class="form-control" id="searchKeyword" name="keyword" placeholder="Keyword">
+            <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude">
+            <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude">
+            <input class="btn-primary" id="submit" type="submit" value="Search" />
+        </div>
+    </div>
+}
+<hr />
+<div style="padding-left: 20px; padding-right: 20px;">
+    <div class="alert alert-info" role="alert">
+        <h6>@Model.Count() Data Found</h6>
+    </div>
+</div>
+<div class="row">
+    <div class="accordion" id="accordion">
+        @foreach (var searchResult in Model)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title" style="margin-top: 10px;">@searchResult.Name</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Description:</strong> @searchResult.ShortDescription</p>
+                    @Html.ActionLink("Book Now", "Booking", "Booking", routeValues: new {
+                        productId = searchResult.Id
+                    }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
